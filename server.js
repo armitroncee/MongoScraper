@@ -29,7 +29,13 @@ app.engine("handlebars", exphbs({
 }));
 app.set("view engine", "handlebars");
 
-mongoose.connect("mongodb://localhost/MongoScraper");
+var databaseUri = ("mongodb://localhost/MongoScraper");
+
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+} else {
+  mongoose.connect(databaseUri)
+}
 
 var db = mongoose.connection;
 
