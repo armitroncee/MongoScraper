@@ -8,7 +8,7 @@ var Article = require("./models/Article.js");
 var request = require("request");
 var cheerio = require("cheerio");
 
-// mongoose.Promise = Promise;
+mongoose.Promise = Promise;
 
 var port = process.env.PORT || 3000
 
@@ -31,13 +31,12 @@ app.set("view engine", "handlebars");
 
 var databaseUri = "mongodb://localhost/MongoScraper";
 
-// if (process.env.MONGODB_URI) {
-//   mongoose.connect(process.env.MONGODB_URI)
-// } else {
-//   mongoose.connect(databaseUri)
-// }
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+} else {
+  mongoose.connect(databaseUri)
+}
 
-mongoose.connect("mongodb://heroku_kk2fhcbx:hhh222@ds151028.mlab.com:51028/heroku_kk2fhcbx")
 
 var db = mongoose.connection;
 
