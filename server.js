@@ -3,8 +3,9 @@ var bodyParser = require("body-parser");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var path = require("path");
-var Note = require("./models/Note.js");
-var Article = require("./models/Article.js");
+// var Note = require("./models/Note.js");
+// var Article = require("./models/Article.js");
+var db = require("./models")
 var request = require("request");
 var cheerio = require("cheerio");
 
@@ -37,25 +38,25 @@ if (process.env.MONGODB_URI) {
   mongoose.connect(databaseUri);
 };
 
-var db = mongoose.connection;
+var dbm = mongoose.connection;
 
-db.on("error", function(error) {
+dbm.on("error", function(error) {
   console.log("Mongoose Error: ", error);
 });
 
-db.once("open", function() {
+dbm.once("open", function() {
   console.log("Mongoose connection successful.");
 });
 
 app.get("/", function(req, res) {
-  Article.find({}, function(error, data) {
+  db.Article.find({}, function(error, data) {
 
     res.render("home", {article: data});
   });
 });
 
 app.get("/saved", function(req, res) {
-  Article.find({},function(error, data) {
+  db.Article.find({},function(error, data) {
     
     res.render("saved", {article: data});
   });
@@ -77,7 +78,7 @@ app.get("/scrape", function(req, res) {
       result.link = $(this).children("h2").children("a").attr("href");
 
       if(result.summary && result.headline) {
-      var entry = new Article(result);
+      var entry = new db.Article(result);
 
       entry.save(function(err, doc) {
         if (err) {
@@ -95,7 +96,7 @@ app.get("/scrape", function(req, res) {
 
 app.get("/articles", function(req, res) {
 
-  Article.find({}, function(error, doc) {
+  db.Article.find({}, function(error, doc) {
     if (error) {
       console.log(error);
     }
@@ -106,7 +107,7 @@ app.get("/articles", function(req, res) {
 });
 
 app.put("/articles/:id", function(req,res){
-  Article.findOneAndUpdate({_id: req.params.id}, {saved: true}, function(error,data){
+  db.Article.findOneAndUpdate({_id: req.params.id}, {saved: true}, function(error,data){
     if (error) {
       console.log(error)
     } else {
@@ -116,7 +117,7 @@ app.put("/articles/:id", function(req,res){
 })
 
 app.put("/article/:id", function(req,res){
-  Article.findOneAndUpdate({_id: req.params.id}, {saved: false}, function(error,data){
+  db.Article.findOneAndUpdate({_id: req.params.id}, {saved: false}, function(error,data){
     if (error) {
       console.log(error)
     } else {
@@ -127,7 +128,7 @@ app.put("/article/:id", function(req,res){
 
 app.get("/notes/:id", function(req, res) {
 
-  Article.findOne({ _id: req.params.id })
+  db.Article.findOne({ _id: req.params.id })
     .populate("note")
     .then(function(dbArticle) {
       res.json(dbArticle);
@@ -139,9 +140,9 @@ app.get("/notes/:id", function(req, res) {
 
 app.post("/notes/:id", function(req, res) {
 
-  Note.create(req.body)
+  db.Note.create(req.body)
     .then(function(dbNote) {
-      return Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
     })
     .then(function(dbArticle) {
       res.json(dbArticle);
