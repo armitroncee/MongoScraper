@@ -31,14 +31,11 @@ app.set("view engine", "handlebars");
 
 var databaseUri = "mongodb://localhost/MongoScraper";
 
-// if (process.env.MONGODB_URI) {
-//   mongoose.connect(process.env.MONGODB_URI)
-// } else {
-//   mongoose.connect(databaseUri)
-// }
-
-mongoose.connect("mongodb://ceeking:lll222@ds151028.mlab.com:51028/heroku_kk2fhcbx")
-
+if (process.env.MONGODB_URI) {
+  mongoose.connect(process.env.MONGODB_URI)
+} else {
+  mongoose.connect(databaseUri)
+}
 
 var db = mongoose.connection;
 
