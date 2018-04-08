@@ -8,7 +8,7 @@ var Article = require("./models/Article.js");
 var request = require("request");
 var cheerio = require("cheerio");
 
-mongoose.Promise = Promise;
+// mongoose.Promise = Promise;
 
 var port = process.env.PORT || 3000
 
@@ -29,7 +29,7 @@ app.engine("handlebars", exphbs({
 }));
 app.set("view engine", "handlebars");
 
-var databaseUri = ("mongodb://localhost/MongoScraper");
+var databaseUri = "mongodb://localhost/MongoScraper";
 
 if (process.env.MONGODB_URI) {
   mongoose.connect(process.env.MONGODB_URI)
