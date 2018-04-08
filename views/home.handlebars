@@ -1,0 +1,18 @@
+<div class="contain">
+  <img src="/images/bnews.jpg" alt="news">
+  <div class="center">
+    <h1 id="title">Mongo Scraper</h1>
+    <h2 id="title2" class="mt-3 text-center">New York Times Edition</h2>
+  </div>
+</div>
+
+{{#each article}}
+{{#unless saved}}
+<div class="card mt-4 mr-5 ml-5 mb-4 border border-primary cardPrime">
+  <h3 class="card-header bg-warning" id="articleHeader"><a href={{this.link}}>{{this.headline}}</a><button data-id="{{this._id}}" class="float-right btn btn-primary" id="save">Save Article</button></h3>
+  <div class="card-body">
+    <p class="card-text" id="articleSummary">{{this.summary}}</p>
+  </div>
+</div>
+{{/unless}}
+{{/each}}
